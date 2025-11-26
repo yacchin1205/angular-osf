@@ -117,6 +117,20 @@ docker rmi <image_name>:<tag>
 docker rmi -f <IMAGE_ID>
 ```
 
+### Running with osf.io
+
+The `docker-local` configuration is available for running this app within the [osf.io](https://github.com/CenterForOpenScience/osf.io) Docker Compose stack.
+
+#### Environment Variables
+
+The following environment variables can be set to override values in `config.json` when `npm run check:config` is executed:
+
+| Variable | Overrides |
+|----------|-----------|
+| `OSF_URL` | `webUrl` |
+| `OSF_API_URL` | `apiDomainUrl` |
+| `OSF_CAS_URL` | `casUrl` |
+
 ---
 
 ## Troubleshooting

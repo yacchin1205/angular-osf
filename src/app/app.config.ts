@@ -6,6 +6,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { DialogService } from 'primeng/dynamicdialog';
 
+import { APP_BASE_HREF } from '@angular/common';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, ErrorHandler, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -17,7 +18,9 @@ import { authInterceptor } from '@core/interceptors/auth.interceptor';
 import { errorInterceptor } from '@core/interceptors/error.interceptor';
 import { viewOnlyInterceptor } from '@core/interceptors/view-only.interceptor';
 import { APPLICATION_INITIALIZATION_PROVIDER } from '@core/provider/application.initialization.provider';
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { SENTRY_PROVIDER } from '@core/provider/sentry.provider';
+import { EnvironmentModel } from '@osf/shared/models/environment.model';
 
 import CustomPreset from './core/theme/custom-preset';
 import { routes } from './app.routes';
@@ -52,6 +55,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' })),
     provideStore(STATES),
     provideZoneChangeDetection({ eventCoalescing: true }),
+    {
+      provide: APP_BASE_HREF,
+      deps: [ENVIRONMENT],
+      useFactory: (environment: EnvironmentModel) => environment.routerBaseHref ?? '/',
+    },
     SENTRY_PROVIDER,
   ],
 };

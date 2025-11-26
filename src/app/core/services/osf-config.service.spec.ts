@@ -33,7 +33,7 @@ describe('Service: Config', () => {
 
   it('should return a value with get()', async () => {
     let loadPromise = service.load();
-    const request = httpMock.expectOne('/assets/config/config.json');
+    const request = httpMock.expectOne('assets/config/config.json');
     request.flush(mockConfig);
     await loadPromise;
     expect(environment.apiDomainUrl).toBe('https://api.example.com');
@@ -49,7 +49,7 @@ describe('Service: Config', () => {
 
   it('should return a value with ahs()', async () => {
     let loadPromise = service.load();
-    const request = httpMock.expectOne('/assets/config/config.json');
+    const request = httpMock.expectOne('assets/config/config.json');
     request.flush(mockConfig);
     await loadPromise;
     expect(environment.apiDomainUrl).toBe('https://api.example.com');

@@ -63,4 +63,9 @@ export interface EnvironmentModel {
    * @example 123456789012
    */
   googleFilePickerAppId: number;
+
+  /**
+   * Base href used by Angular's Router. Defaults to '/'.
+   */
+  routerBaseHref?: string;
 }

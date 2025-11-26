@@ -105,6 +105,18 @@
                 }
               ]
             },
+            "docker-local": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "baseHref": "/angular_osf/",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.docker-local.ts"
+                }
+              ]
+            },
             "staging": {
               "optimization": true,
               "extractLicenses": false,
@@ -153,6 +165,10 @@
             },
             "docker": {
               "buildTarget": "osf:build:docker",
+              "hmr": true
+            },
+            "docker-local": {
+              "buildTarget": "osf:build:docker-local",
               "hmr": true
             },
             "staging": {

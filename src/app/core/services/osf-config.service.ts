@@ -42,7 +42,7 @@ export class OSFConfigService {
   async load(): Promise<void> {
     if (!this.config) {
       this.config = await lastValueFrom<ConfigModel>(
-        this.http.get<ConfigModel>('/assets/config/config.json').pipe(
+        this.http.get<ConfigModel>('assets/config/config.json').pipe(
           shareReplay(1),
           catchError(() => of({} as ConfigModel))
         )

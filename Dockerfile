@@ -34,5 +34,8 @@ COPY package*.json ./
 # COPY package-lock.docker.json ./package-lock.json
 RUN npm ci --no-audit --no-fund
 
+# Copy the full workspace so the container can run without host volumes
+COPY . .
+
 # Expose Angular dev server
 EXPOSE 4200
