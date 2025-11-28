@@ -9,7 +9,13 @@ import { Router } from '@angular/router';
 
 import { FileMenuType } from '@osf/shared/enums/file-menu-type.enum';
 import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
+import { FileModel } from '@osf/shared/models/files/file.model';
 import { MenuManagerService } from '@osf/shared/services/menu-manager.service';
+import {
+  FILE_MENU_EXTENSIONS,
+  FileMenuContext,
+  FileMenuExtension,
+} from '@osf/shared/tokens/file-menu-extensions.token';
 import { FileMenuAction, FileMenuData, FileMenuFlags } from '@shared/models/files/file-menu-action.model';
 
 @Component({
@@ -21,6 +27,10 @@ import { FileMenuAction, FileMenuData, FileMenuFlags } from '@shared/models/file
 export class FileMenuComponent {
   private router = inject(Router);
   private menuManager = inject(MenuManagerService);
+  private fileMenuContext = inject(FileMenuContext);
+  private extensions = inject(FILE_MENU_EXTENSIONS, { optional: true }) ?? [];
+
+  file = input<FileModel>();
   isFolder = input<boolean>(false);
   allowedActions = input<FileMenuFlags>({} as FileMenuFlags);
   menu = viewChild.required<TieredMenu>('menu');
@@ -106,6 +116,8 @@ export class FileMenuComponent {
   ];
 
   menuItems = computed(() => {
+    let items: MenuItem[];
+
     if (this.hasViewOnly()) {
       const allowedActionsForFiles = [
         FileMenuType.Download,
@@ -120,7 +132,7 @@ export class FileMenuComponent {
 
       const allowedActions = this.isFolder() ? allowedActionsForFolders : allowedActionsForFiles;
 
-      return this.allMenuItems.filter((item) => {
+      items = this.allMenuItems.filter((item) => {
         if (item.command) {
           return allowedActions.includes(item.id as FileMenuType);
         }
@@ -131,18 +143,50 @@ export class FileMenuComponent {
 
         return false;
       });
-    }
-
-    if (this.isFolder()) {
+    } else if (this.isFolder()) {
       const disallowedActions = [FileMenuType.Share, FileMenuType.Embed];
-      return this.allMenuItems.filter(
+      items = this.allMenuItems.filter(
         (item) => !disallowedActions.includes(item.id as FileMenuType) && this.allowedActions()[item.id as FileMenuType]
       );
+    } else {
+      items = this.allMenuItems.filter((item) => this.allowedActions()[item.id as FileMenuType]);
     }
-    return this.allMenuItems.filter((item) => this.allowedActions()[item.id as FileMenuType]);
+
+    return this.mergeExtensions(items);
   });
 
+  private mergeExtensions(baseItems: MenuItem[]): MenuItem[] {
+    const applicableExtensions = this.extensions.flat().filter((ext) => this.isExtensionApplicable(ext));
+
+    let items = [...baseItems];
+
+    for (const ext of applicableExtensions) {
+      const { item, position = 'end' } = ext;
+
+      if (position === 'start') {
+        items = [item, ...items];
+      } else if (position === 'end') {
+        items = [...items, item];
+      } else if (typeof position === 'number') {
+        items = [...items.slice(0, position), item, ...items.slice(position)];
+      }
+    }
+
+    return items;
+  }
+
+  private isExtensionApplicable(ext: FileMenuExtension): boolean {
+    if (this.isFolder() && !ext.showForFolder) {
+      return false;
+    }
+    if (this.hasViewOnly() && ext.showInViewOnly === false) {
+      return false;
+    }
+    return true;
+  }
+
   onMenuToggle(event: Event): void {
+    this.fileMenuContext.setCurrentFile(this.file() ?? null);
     this.menuManager.openMenu(this.menu(), event);
   }
 

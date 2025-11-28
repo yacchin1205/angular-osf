@@ -6,6 +6,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { DialogService } from 'primeng/dynamicdialog';
 
+import { Clipboard } from '@angular/cdk/clipboard';
 import { APP_BASE_HREF } from '@angular/common';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, ErrorHandler, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
@@ -21,9 +22,11 @@ import { APPLICATION_INITIALIZATION_PROVIDER } from '@core/provider/application.
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { SENTRY_PROVIDER } from '@core/provider/sentry.provider';
 import { EnvironmentModel } from '@osf/shared/models/environment.model';
+import { FILE_MENU_EXTENSIONS, FileMenuContext } from '@osf/shared/tokens/file-menu-extensions.token';
 
 import CustomPreset from './core/theme/custom-preset';
 import { routes } from './app.routes';
+import { copyLinksExtensionFactory } from './extensions';
 
 import * as Sentry from '@sentry/angular';
 
@@ -61,5 +64,13 @@ export const appConfig: ApplicationConfig = {
       useFactory: (environment: EnvironmentModel) => environment.routerBaseHref ?? '/',
     },
     SENTRY_PROVIDER,
+
+    // File Menu Extensions
+    {
+      provide: FILE_MENU_EXTENSIONS,
+      useFactory: copyLinksExtensionFactory,
+      deps: [FileMenuContext, Clipboard],
+      multi: true,
+    },
   ],
 };
