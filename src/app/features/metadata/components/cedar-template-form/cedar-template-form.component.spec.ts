@@ -21,6 +21,10 @@ describe('CedarTemplateFormComponent', () => {
 
     fixture = TestBed.createComponent(CedarTemplateFormComponent);
     fixture.componentRef.setInput('template', mockTemplate);
+    fixture.componentRef.setInput('context', {
+      target: { id: 'resource-1', type: 'nodes' },
+      apiDomainUrl: 'https://api.example.com',
+    });
     fixture.componentRef.setInput('existingRecord', null);
     fixture.componentRef.setInput('readonly', false);
     fixture.componentRef.setInput('showEditButton', false);

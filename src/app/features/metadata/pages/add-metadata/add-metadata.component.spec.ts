@@ -100,6 +100,13 @@ describe('AddMetadataComponent', () => {
     expect(component.resourceType()).toBe(ResourceType.Project);
   });
 
+  it('should provide resource context to the editor', () => {
+    expect(component.editorContext).toEqual({
+      target: { id: 'resource-1', type: 'nodes' },
+      apiDomainUrl: expect.any(String),
+    });
+  });
+
   it('should not select a template if existing record exists', () => {
     component.selectedTemplate = null;
     component.onSelect(mockTemplate);

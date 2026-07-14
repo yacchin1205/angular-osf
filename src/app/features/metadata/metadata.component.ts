@@ -77,7 +77,9 @@ import {
   ResourceInformationDialogComponent,
   ResourceInfoTooltipComponent,
 } from './dialogs';
+import { createCedarEditorContext } from './helpers';
 import {
+  CedarEditorContext,
   CedarMetadataDataTemplateJsonApi,
   CedarMetadataRecordData,
   CedarRecordDataBinding,
@@ -133,6 +135,7 @@ export class MetadataComponent implements OnInit, OnDestroy {
   private readonly signpostingService = inject(SignpostingService);
 
   private resourceId = '';
+  editorContext!: CedarEditorContext;
 
   tabs = signal<MetadataTabsModel[]>([]);
   selectedTab = signal('osf');
@@ -262,6 +265,7 @@ export class MetadataComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.resourceId = this.activeRoute.parent?.parent?.snapshot.params['id'];
+    this.editorContext = createCedarEditorContext(this.resourceId, this.resourceType(), this.environment.apiDomainUrl);
     if (this.resourceId && this.resourceType()) {
       this.actions.getResourceMetadata(this.resourceId, this.resourceType());
       this.actions.getCustomItemMetadata(this.resourceId);

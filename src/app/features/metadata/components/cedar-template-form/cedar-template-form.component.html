@@ -62,15 +62,14 @@
           [instanceObject]="formData()"
         ></cedar-artifact-viewer>
       } @else {
-        <cedar-embeddable-editor
+        <osf-cedar-editor-host
           #cedarEditor
           [config]="cedarConfig"
+          [context]="context()"
           [templateObject]="template().attributes.template"
           [metadata]="formData()"
-          (change)="onCedarChange($event)"
-          (pointerover)="validateCedarMetadata()"
-          (keyup)="onCedarChange($event)"
-        ></cedar-embeddable-editor>
+          (editorChange)="onCedarChange($event)"
+        />
       }
     </div>
 

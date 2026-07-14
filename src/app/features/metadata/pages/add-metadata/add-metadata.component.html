@@ -72,6 +72,7 @@
     (toggleEditMode)="toggleEditMode()"
     (emitData)="createRecordMetadata($event)"
     (changeTemplate)="disableSelect()"
+    [context]="editorContext"
     [template]="selectedTemplate"
     [existingRecord]="existingRecord"
     [readonly]="!isEditMode"

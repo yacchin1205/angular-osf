@@ -27,5 +27,7 @@
   "newRelicLoaderConfigTrustKey": "",
   "newRelicLoaderConfigAgentID": "",
   "newRelicLoaderConfigLicenseKey": "",
-  "newRelicLoaderConfigApplicationID": ""
+  "newRelicLoaderConfigApplicationID": "",
+  "cedarEditorElementName": "",
+  "cedarEditorScriptUrl": ""
 }

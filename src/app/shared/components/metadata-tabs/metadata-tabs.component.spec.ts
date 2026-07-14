@@ -47,6 +47,10 @@ describe('MetadataTabsComponent', () => {
     fixture.componentRef.setInput('selectedTab', 'tab1');
     fixture.componentRef.setInput('selectedCedarTemplate', mockCedarTemplate);
     fixture.componentRef.setInput('selectedCedarRecord', mockCedarRecord);
+    fixture.componentRef.setInput('editorContext', {
+      target: { id: 'resource-1', type: 'nodes' },
+      apiDomainUrl: 'https://api.example.com',
+    });
 
     fixture.detectChanges();
   });

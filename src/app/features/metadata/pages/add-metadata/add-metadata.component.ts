@@ -18,6 +18,7 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
@@ -25,7 +26,13 @@ import { IS_MEDIUM } from '@osf/shared/helpers/breakpoints.tokens';
 import { ToastService } from '@osf/shared/services/toast.service';
 
 import { CedarTemplateFormComponent } from '../../components';
-import { CedarMetadataDataTemplateJsonApi, CedarMetadataRecordData, CedarRecordDataBinding } from '../../models';
+import { createCedarEditorContext } from '../../helpers';
+import {
+  CedarEditorContext,
+  CedarMetadataDataTemplateJsonApi,
+  CedarMetadataRecordData,
+  CedarRecordDataBinding,
+} from '../../models';
 import {
   CreateCedarMetadataRecord,
   GetCedarMetadataRecords,
@@ -48,10 +55,12 @@ export class AddMetadataComponent implements OnInit {
   private readonly toastService = inject(ToastService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly environment = inject(ENVIRONMENT);
 
   readonly isMedium = toSignal(inject(IS_MEDIUM));
 
   private resourceId = '';
+  editorContext!: CedarEditorContext;
   isEditMode = true;
   selectedTemplate: CedarMetadataDataTemplateJsonApi | null = null;
   existingRecord: CedarMetadataRecordData | null = null;
@@ -103,10 +112,8 @@ export class AddMetadataComponent implements OnInit {
 
   ngOnInit(): void {
     this.resourceId = this.activeRoute.parent?.parent?.snapshot.params['id'];
-
-    if (this.resourceId) {
-      this.actions.getCedarRecords(this.resourceId, this.resourceType());
-    }
+    this.editorContext = createCedarEditorContext(this.resourceId, this.resourceType(), this.environment.apiDomainUrl);
+    this.actions.getCedarRecords(this.resourceId, this.resourceType());
 
     this.actions.getCedarTemplates();
   }

@@ -27,7 +27,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
+import { createCedarEditorContext } from '@osf/features/metadata/helpers';
 import {
+  CedarEditorContext,
   CedarMetadataDataTemplateJsonApi,
   CedarMetadataRecordData,
   CedarRecordDataBinding,
@@ -157,6 +159,7 @@ export class FileDetailComponent implements OnInit, OnDestroy {
   selectedTab: FileDetailTab = FileDetailTab.Details;
 
   fileGuid = '';
+  editorContext!: CedarEditorContext;
   fileVersion = '';
 
   embedItems = [
@@ -219,6 +222,11 @@ export class FileDetailComponent implements OnInit, OnDestroy {
         takeUntilDestroyed(this.destroyRef),
         switchMap((params) => {
           this.fileGuid = params['fileGuid'];
+          this.editorContext = createCedarEditorContext(
+            this.fileGuid,
+            ResourceType.File,
+            this.environment.apiDomainUrl
+          );
           return this.actions.getFile(this.fileGuid);
         })
       )

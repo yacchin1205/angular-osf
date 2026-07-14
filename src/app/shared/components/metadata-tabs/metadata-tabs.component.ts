@@ -6,6 +6,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 
 import { CedarTemplateFormComponent } from '@osf/features/metadata/components';
 import {
+  CedarEditorContext,
   CedarMetadataDataTemplateJsonApi,
   CedarMetadataRecordData,
   CedarRecordDataBinding,
@@ -27,6 +28,7 @@ export class MetadataTabsComponent {
   selectedTab = input.required<string>();
   selectedCedarTemplate = input.required<CedarMetadataDataTemplateJsonApi>();
   selectedCedarRecord = input.required<CedarMetadataRecordData | null>();
+  editorContext = input.required<CedarEditorContext>();
   cedarFormReadonly = input<boolean>(true);
   canEdit = input<boolean>(true);
   changeTab = output<string | number>();

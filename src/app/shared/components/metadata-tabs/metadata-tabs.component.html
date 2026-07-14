@@ -19,6 +19,7 @@
             @if (selectedCedarTemplate() && selectedCedarRecord()) {
               @if (tab.id === selectedCedarRecord()?.id) {
                 <osf-cedar-template-form
+                  [context]="editorContext()"
                   [template]="selectedCedarTemplate()!"
                   [existingRecord]="selectedCedarRecord()!"
                   [readonly]="cedarFormReadonly()"

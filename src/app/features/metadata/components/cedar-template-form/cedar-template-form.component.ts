@@ -28,15 +28,18 @@ import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { CEDAR_CONFIG, CEDAR_VIEWER_CONFIG } from '../../constants';
 import { CedarMetadataHelper } from '../../helpers';
 import {
+  CedarEditorContext,
   CedarEditorElement,
   CedarMetadataDataTemplateJsonApi,
   CedarMetadataRecordData,
   CedarRecordDataBinding,
 } from '../../models';
 
+import { CedarEditorHostComponent } from './cedar-editor-host.component';
+
 @Component({
   selector: 'osf-cedar-template-form',
-  imports: [CommonModule, Button, TranslatePipe, Tooltip, Menu],
+  imports: [CommonModule, Button, TranslatePipe, Tooltip, Menu, CedarEditorHostComponent],
   templateUrl: './cedar-template-form.component.html',
   styleUrl: './cedar-template-form.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -49,6 +52,7 @@ export class CedarTemplateFormComponent {
   toggleEditMode = output<void>();
 
   template = input.required<CedarMetadataDataTemplateJsonApi>();
+  context = input.required<CedarEditorContext>();
   existingRecord = input<CedarMetadataRecordData | null>(null);
   readonly = input<boolean>(false);
   showEditButton = input<boolean>(false);
@@ -58,7 +62,7 @@ export class CedarTemplateFormComponent {
   cedarConfig = CEDAR_CONFIG;
   cedarViewerConfig = CEDAR_VIEWER_CONFIG;
   isValid = false;
-  cedarEditor = viewChild<ElementRef<CedarEditorElement>>('cedarEditor');
+  cedarEditor = viewChild<CedarEditorHostComponent>('cedarEditor');
   cedarViewer = viewChild<ElementRef<CedarEditorElement>>('cedarViewer');
 
   private route = inject(ActivatedRoute);
@@ -104,7 +108,7 @@ export class CedarTemplateFormComponent {
 
   private initializeCedar(): void {
     const metadata = this.existingRecord()?.attributes?.metadata;
-    const editor = this.cedarEditor()?.nativeElement;
+    const editor = this.cedarEditor();
     const viewer = this.cedarViewer()?.nativeElement;
 
     this.initializeFormData();
@@ -161,7 +165,7 @@ export class CedarTemplateFormComponent {
   }
 
   validateCedarMetadata() {
-    const report = this.cedarEditor()?.nativeElement.dataQualityReport;
+    const report = this.cedarEditor()?.dataQualityReport;
     this.isValid = !!report?.isValid;
   }
 
@@ -175,7 +179,7 @@ export class CedarTemplateFormComponent {
   }
 
   onSubmit() {
-    const editor = this.cedarEditor()?.nativeElement;
+    const editor = this.cedarEditor();
     if (editor && typeof editor.currentMetadata !== 'undefined') {
       const finalData = { data: editor.currentMetadata, id: this.template().id, isPublished: this.isValid };
       this.formData.set(finalData);

@@ -60,6 +60,11 @@ describe('MetadataComponent', () => {
         snapshot: {
           data: { resourceType: ResourceType.Project },
         },
+        parent: {
+          snapshot: {
+            params: { id: mockResourceId },
+          },
+        },
       },
       writable: true,
       configurable: true,
@@ -119,6 +124,15 @@ describe('MetadataComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should provide resource context to the editor', () => {
+    fixture.detectChanges();
+
+    expect(component.editorContext).toEqual({
+      target: { id: mockResourceId, type: 'nodes' },
+      apiDomainUrl: expect.any(String),
+    });
   });
 
   it('should handle tab change for OSF tab', () => {

@@ -32,6 +32,8 @@ export interface EnvironmentModel {
   activityLogs?: {
     pageSize?: number;
   };
+  cedarEditorElementName?: string;
+  cedarEditorScriptUrl?: string;
 
   /**
    * The DSN (Data Source Name) used to configure Sentry for error tracking.
